@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ExportModels">
+      <UniqueIdentifier>{7292982d-9163-477c-97b4-9196beb7aa1d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\gaExportModels.h">
+      <Filter>ExportModels</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\gaExportModels.cpp">
+      <Filter>ExportModels</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

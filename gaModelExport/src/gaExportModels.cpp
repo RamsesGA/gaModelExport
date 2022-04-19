@@ -1,14 +1,215 @@
+<<<<<<< Updated upstream
+=======
+#include <gaWriteModels.h>
+
+>>>>>>> Stashed changes
 #include "gaExportModels.h"
 
 MTypeId gaExportModels::m_id(0x001386c3);
 
 /*****************************************************************************/
 /**
+<<<<<<< Updated upstream
 * Local Methods.
 */
 /*****************************************************************************/
 
 MStatus 
+=======
+* Methods EXPORTER.
+*/
+/*****************************************************************************/
+
+MStatus
+gaExportModels::writer(const MFileObject& file,
+                       const MString& optionsString,
+                       FileAccessMode mode) {
+  MGlobal::displayInfo("Writer is working");
+
+  const MString fileName = file.expandedFullName();
+
+  ofstream newFile(fileName.asChar(), std::ios::out);
+
+  if (!newFile) {
+    MGlobal::displayError(fileName + ": could not be opened for reading");
+    return MS::kFailure;
+  }
+  newFile.setf(std::ios::unitbuf);
+
+  writeHeader(newFile);
+
+  if (MPxFileTranslator::kExportAccessMode == mode) {
+    if (MStatus::kFailure == exportAll(newFile)) {
+      return MStatus::kFailure;
+    }
+  }
+  else if (MPxFileTranslator::kExportActiveAccessMode == mode) {
+    if (MStatus::kFailure == exportSelection(newFile)) {
+      return MStatus::kFailure;
+    }
+  }
+  else {
+    return MStatus::kFailure;
+  }
+
+  writeFooter(newFile);
+  newFile.flush();
+  newFile.close();
+
+  MGlobal::displayInfo("Export to " + fileName + " successful!");
+  return MS::kSuccess;
+}
+
+bool
+gaExportModels::haveReadMethod() const {
+  return false;
+  //return true;
+}
+
+bool
+gaExportModels::haveWriteMethod() const {
+  //return false;
+  return true;
+}
+
+bool 
+gaExportModels::canBeOpened() const {
+  return true;
+}
+
+MString
+gaExportModels::defaultExtension() const {
+  return MString(GA_FORMAT);
+}
+
+bool
+gaExportModels::isVisible(MFnDagNode& fnDag, MStatus& status) {
+  if (fnDag.isIntermediateObject()) {
+    return false;
+  }
+
+  MPlug visPlug = fnDag.findPlug("visibility", true, &status);
+
+  if (MStatus::kFailure == status) {
+    MGlobal::displayError("MPlug::findPlug");
+    return false;
+  }
+  else {
+    bool visible;
+    status = visPlug.getValue(visible);
+    if (MStatus::kFailure == status) {
+      MGlobal::displayError("MPlug::getValue");
+    }
+    return visible;
+  }
+}
+
+MStatus
+gaExportModels::exportAll(ostream& os) {
+  MGlobal::displayInfo("Export All is working");
+
+  MStatus status;
+
+	MItDag itDag(MItDag::kDepthFirst, MFn::kMesh, &status);
+
+	if (MStatus::kFailure == status) {
+		MGlobal::displayError("MItDag::MItDag");
+		return MStatus::kFailure;
+	}
+
+	for(;!itDag.isDone();itDag.next()) {
+		MDagPath dagPath;
+		if (MStatus::kFailure == itDag.getPath(dagPath)) {
+			MGlobal::displayError("MDagPath::getPath");
+			return MStatus::kFailure;
+		}
+
+		MFnDagNode visTester(dagPath);
+
+		if(isVisible(visTester, status) && MStatus::kSuccess == status) {
+			if (MStatus::kFailure == processPolyMesh(dagPath, os)) {
+				return MStatus::kFailure;
+			}
+		}
+	}
+	return MStatus::kSuccess;
+}
+
+MStatus 
+gaExportModels::exportSelection(ostream& os) {
+  MStatus status;
+
+  MSelectionList selectionList;
+  if (MStatus::kFailure == MGlobal::getActiveSelectionList(selectionList)) {
+    MGlobal::displayError("MGlobal::getActiveSelectionList");
+    return MStatus::kFailure;
+  }
+
+  MItSelectionList itSelectionList(selectionList, MFn::kMesh, &status);
+  if (MStatus::kFailure == status) {
+    return MStatus::kFailure;
+  }
+
+  for (itSelectionList.reset(); !itSelectionList.isDone(); itSelectionList.next()) {
+    MDagPath dagPath;
+
+    if (MStatus::kFailure == itSelectionList.getDagPath(dagPath)) {
+      MGlobal::displayError("MItSelectionList::getDagPath");
+      return MStatus::kFailure;
+    }
+
+    if (MStatus::kFailure == processPolyMesh(dagPath, os)) {
+      return MStatus::kFailure;
+    }
+  }
+  return MStatus::kSuccess;
+}
+
+void 
+gaExportModels::writeFooter(ostream& os) {
+  os << "";
+}
+
+MStatus 
+gaExportModels::processPolyMesh(const MDagPath dagPath, ostream& os) {
+  MStatus status;
+  gaWriterModels* pWriter = createPolyWriter(dagPath, status);
+
+  if (MStatus::kFailure == status) {
+    delete pWriter;
+    return MStatus::kFailure;
+  }
+  if (MStatus::kFailure == pWriter->extractGeometry()) {
+    delete pWriter;
+    return MStatus::kFailure;
+  }
+  if (MStatus::kFailure == pWriter->writeToFile(os)) {
+    delete pWriter;
+    return MStatus::kFailure;
+  }
+  delete pWriter;
+
+  return MStatus::kSuccess;
+}
+
+gaWriterModels*
+gaExportModels::createPolyWriter(const MDagPath dagPath, MStatus& status) {
+  return new gaWriterModels(dagPath, status);
+}
+
+/*****************************************************************************/
+/**
+* Methods RAW EXPORTER.
+*/
+/*****************************************************************************/
+
+void*
+gaExportModels::creator() {
+  return new gaExportModels();
+}
+
+MStatus
+>>>>>>> Stashed changes
 initializePlugin(MObject obj) {
   MStatus status;
   MFnPlugin plugin(obj, PLUGIN_GA_ENGINE, "1.0", "Any");
@@ -16,8 +217,13 @@ initializePlugin(MObject obj) {
   status = plugin.registerFileTranslator(PLUGIN_GA_ENGINE,
                                          "",
                                          gaExportModels::creator,
+<<<<<<< Updated upstream
                                          "", 
                                          "option1=1", 
+=======
+                                         "",
+                                         "option1=1",
+>>>>>>> Stashed changes
                                          true);
 
   if (!status) {
@@ -30,7 +236,11 @@ initializePlugin(MObject obj) {
   return status;
 }
 
+<<<<<<< Updated upstream
 MStatus 
+=======
+MStatus
+>>>>>>> Stashed changes
 uninitializePlugin(MObject obj) {
   MStatus status;
   MFnPlugin plugin(obj);
@@ -47,12 +257,25 @@ uninitializePlugin(MObject obj) {
   return status;
 }
 
+<<<<<<< Updated upstream
+=======
+void
+gaExportModels::writeHeader(ostream& os) {
+  os << "Legend:\n"
+     << "Delimiter = TAB\n"
+     << "() = coordinates\n"
+     << "[] = vector\n"
+     << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
+}
+
+>>>>>>> Stashed changes
 /*****************************************************************************/
 /**
 * Class Methods.
 */
 /*****************************************************************************/
 
+<<<<<<< Updated upstream
 MStatus 
 gaExportModels::initialize() {
   return MS::kFailure;
@@ -63,6 +286,8 @@ gaExportModels::creator() {
   return new gaExportModels();
 }
 
+=======
+>>>>>>> Stashed changes
 MStatus
 gaExportModels::compute(const MPlug& plug, MDataBlock& data) {
   MStatus returnStatus;
@@ -70,6 +295,7 @@ gaExportModels::compute(const MPlug& plug, MDataBlock& data) {
   return MS::kSuccess;
 }
 
+<<<<<<< Updated upstream
 MStatus 
 gaExportModels::reader(const MFileObject& file, 
                        const MString& options, 
@@ -163,6 +389,20 @@ gaExportModels::haveWriteMethod() const {
 MPxFileTranslator::MFileKind 
 gaExportModels::identifyFile(const MFileObject& file, 
                              const char* buffer, 
+=======
+MStatus
+gaExportModels::reader(const MFileObject& file,
+                       const MString& options,
+                       FileAccessMode mode) {
+  MGlobal::displayInfo("Reader is working");
+
+  return MS::kFailure;
+}
+
+MPxFileTranslator::MFileKind
+gaExportModels::identifyFile(const MFileObject& file,
+                             const char* buffer,
+>>>>>>> Stashed changes
                              short size) const {
   MGlobal::displayInfo("Identify File is working");
 
@@ -179,6 +419,7 @@ gaExportModels::identifyFile(const MFileObject& file,
 MString
 gaExportModels::filter() const {
   return "*.gam";
+<<<<<<< Updated upstream
 }
 
 MStatus 
@@ -191,4 +432,6 @@ gaExportModels::exportAll(ofstream& file) {
 MString
 gaExportModels::defaultExtension() const {
   return MString(GA_FORMAT);
+=======
+>>>>>>> Stashed changes
 }

@@ -4,15 +4,33 @@
     <Filter Include="ExportModels">
       <UniqueIdentifier>{7292982d-9163-477c-97b4-9196beb7aa1d}</UniqueIdentifier>
     </Filter>
+<<<<<<< Updated upstream
+=======
+    <Filter Include="Writer">
+      <UniqueIdentifier>{f45c9a16-af5c-4fef-a99c-34f770bd534e}</UniqueIdentifier>
+    </Filter>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\gaExportModels.h">
       <Filter>ExportModels</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="include\gaWriteModels.h">
+      <Filter>Writer</Filter>
+    </ClInclude>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gaExportModels.cpp">
       <Filter>ExportModels</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="src\gaWriteModels.cpp">
+      <Filter>Writer</Filter>
+    </ClCompile>
+>>>>>>> Stashed changes
   </ItemGroup>
 </Project>

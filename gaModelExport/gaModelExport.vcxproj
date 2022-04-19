@@ -20,9 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\gaExportModels.h" />
+<<<<<<< Updated upstream
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\gaExportModels.cpp" />
+=======
+    <ClInclude Include="include\gaWriteModels.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\gaExportModels.cpp" />
+    <ClCompile Include="src\gaWriteModels.cpp" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

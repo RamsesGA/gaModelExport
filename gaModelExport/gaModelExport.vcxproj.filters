@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Writer">
+      <UniqueIdentifier>{f45c9a16-af5c-4fef-a99c-34f770bd534e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exporter">
+      <UniqueIdentifier>{ec42904c-3825-4fa7-bb44-fa2ab5b6a119}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\gaWriter.h">
+      <Filter>Writer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gaWriter2.h">
+      <Filter>Writer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gaExporter.h">
+      <Filter>Exporter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gaExporter2.h">
+      <Filter>Exporter</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\gaWriter.cpp">
+      <Filter>Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gaWriter2.cpp">
+      <Filter>Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gaExporter.cpp">
+      <Filter>Exporter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gaExporter2.cpp">
+      <Filter>Exporter</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
